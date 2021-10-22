@@ -1,0 +1,105 @@
+from itertools import permutations
+def Matrizaçao(dimen, matriz, entrada):
+    for i in range(int(dimen[0])):
+        for j in range(int(dimen[1])):
+            if i == 0:
+                matriz[i].append(entrada[j])
+            elif i == 1:
+                matriz[i].append(entrada[j + int(dimen[1])])
+            elif i == 2:
+                matriz[i].append(entrada[j + int(dimen[1]) * i])
+            elif i == 3:
+                matriz[i].append(entrada[j + int(dimen[1]) * i])
+            elif i == 4:
+                matriz[i].append(entrada[j + int(dimen[1]) * i])
+            elif i == 5:
+                matriz[i].append(entrada[j + int(dimen[1]) * i])
+            elif i == 6:
+                matriz[i].append(entrada[j + int(dimen[1]) * i])
+            elif i == 7:
+                matriz[i].append(entrada[j + int(dimen[1]) * i])
+            elif i == 8:
+                matriz[i].append(entrada[j + int(dimen[1]) * i])
+            elif i == 9:
+                matriz[i].append(entrada[j + int(dimen[1]) * i])
+            elif i == 10:
+                matriz[i].append(entrada[j + int(dimen[1]) * i])
+            elif i == 11:
+                matriz[i].append(entrada[j + int(dimen[1]) * i])
+            elif i == 12:
+                matriz[i].append(entrada[j + int(dimen[1]) * i])
+            elif i == 13:
+                matriz[i].append(entrada[j + int(dimen[1]) * i])
+            elif i == 14:
+                matriz[i].append(entrada[j + int(dimen[1]) * i])
+            elif i == 15:
+                matriz[i].append(entrada[j + int(dimen[1]) * i])
+
+    return matriz
+def Coord(dimen, matriz, coord, robo, letras):
+    for i in range(int(dimen[0])):
+        for j in range(int(dimen[1])):
+            if 'A' or 'B' or 'C' or 'D' or 'E' or 'F' or 'G' or 'H' or 'I' or 'J' or 'K' or 'R' in matriz[i] == True:
+                vetor = matriz[i]
+                if vetor[j] != '0' and vetor[j] != 'R':
+                    letras.append(vetor[j])
+                    coord.append([i, j])
+                elif vetor[j] == 'R':
+                    robo.append([i, j])
+    return coord, robo, letras
+def Permut(coord, letras, perm, permb):
+    perm += list(permutations(coord))
+    permb += list(permutations(letras))
+    return perm
+def Dist(perm, robo, distancias):
+    robs = robo[0]
+    for i in range(len(perm)):
+        distancia = 0
+        A = perm[i]
+        a = A[0]
+        b = A[1]
+        c = A[2]
+        d = A[3]
+
+        distancia += abs(int(robs[0] - a[0])) + abs(int(robs[1] - a[1]))
+        distancia += abs(int(a[0] - b[0])) + abs(int(a[1] - b[1]))
+        distancia += abs(int(b[0] - c[0])) + abs(int(b[1] - c[1]))
+        distancia += abs(int(c[0] - d[0])) + abs(int(c[1] - d[1]))
+        distancia += abs(int(d[0] - robs[0])) + abs(int(d[1] - robs[1]))
+        distancias.append(distancia)
+    return distancias
+def MenorRota(distancias, permb, menorrota):
+    menorrota.append('R')
+    for i in range(len(permb)):
+        if int(distancias[i]) == min(distancias):
+            vetor = permb[i]
+            for i in range(len(vetor)):
+                menorrota.append(vetor[i])
+            menorrota.append('R')
+            menorrota.append(min(distancias))
+            break
+    return menorrota
+# 0 0 0 0 D 0 A 0 0 0 0 0 0 0 C R 0 B 0 0
+# 0 0 0 0 D
+# 0 A 0 0 0
+# 0 0 0 0 C
+# R 0 B 0 0
+DIMEN = input().split()
+ENTRADA = input().split()
+MATRIZ = [[] for _ in range(int(DIMEN[0]))]
+COORD = []
+PERM = []
+PERMB = []
+LETRAS = []
+ROBO = []
+DISTANCIAS = []
+MENORROTA = []
+
+Matrizaçao(DIMEN, MATRIZ, ENTRADA)
+Coord(DIMEN, MATRIZ, COORD, ROBO, LETRAS)
+Permut(COORD, LETRAS, PERM, PERMB)
+Dist(PERM, ROBO, DISTANCIAS)
+MenorRota(DISTANCIAS, PERMB, MENORROTA)
+print('Rota mais rápida que anda por apenas {} unidades de espaço:'.format(MENORROTA[len(MENORROTA) - 1]))
+for i in list(MENORROTA):
+    print(i, end=" ")
