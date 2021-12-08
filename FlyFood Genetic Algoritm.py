@@ -1,5 +1,6 @@
 #Importação da biblioteca.
 import random
+import matplotlib.pyplot as plt
 
 class PontoDeEntrega:
 
@@ -79,7 +80,6 @@ def fitness_rota(distancia):
 
     return fitness_valor
 
-
 #Ordena as rotas pelo valor do fitness (fundação de aptidão).
 def rank_rotas(populacao):
 
@@ -91,7 +91,13 @@ def rank_rotas(populacao):
 
     #Ordena a matriz utilizando como critério o valor do fitness (decrescente).
     fitness_rotas.sort(reverse=True, key=lambda x: x[1])
+    melhores.append(fitness_rotas[0][1])
 
+    total = 0
+    for i in range(len(fitness_rotas[1])):
+        total = total + fitness_rotas[i][1]
+    media = total/len(fitness_rotas[1])
+    medias.append(media)
     return fitness_rotas
 
 
@@ -243,11 +249,13 @@ def principal(populacao, tamanha_populacao, taxa_mutacao, geracoes):
     #print("Distância final: " + str(int(1 / rank_rotas(populacao_atual)[0][1])))
 
     #Pega o índice referente a melhor rota.
+
     melhor_rota_indice = rank_rotas(populacao_atual)[0][0]
     #Usa o índice da melhor nota para retorna-lá.
     melhor_rota = populacao_atual[melhor_rota_indice]
 
     return melhor_rota
+
 
 #Abre o arquivo com a matriz de entrada.
 arquivo = open("matriz.txt")
@@ -274,7 +282,8 @@ for i in range(linha):
 
 #Lista vazia.
 pontos_de_entrega = []
-
+melhores = []
+medias=[]
 #Usa as informações armazenadas em "ponto_identificacao" para montar uma lista com os todos pontos de entrega.
 for i in range(len(ponto_identificacao)):
     if ponto_identificacao[i][0] != 'R':
@@ -282,7 +291,7 @@ for i in range(len(ponto_identificacao)):
     else:
         ponto_inicial = ponto_identificacao[i][1]
 
-resposta = principal(pontos_de_entrega, 400, 0.03, 80)
+resposta = principal(pontos_de_entrega, 200, 0.03, 80)
 #print(resposta)
 
 #Imprime na tela a letra referente a coordenada de cada ponto da rota.
@@ -293,4 +302,13 @@ for i in range(len(resposta)):
                 print(ponto_identificacao[j][0], end=" ")
             else:
                 print(ponto_identificacao[j][0])
+geracoes = []
+for i in range(len(melhores)):
+    geracoes.append(i)
 
+plt.plot(melhores, label='Melhor da geração')
+plt.plot(medias, label='Média da geração')
+plt.ylabel('Valor Fitness')
+plt.xlabel('Quantidade de gerações')
+plt.legend()
+plt.show()
